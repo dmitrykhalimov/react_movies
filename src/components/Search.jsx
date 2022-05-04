@@ -5,22 +5,24 @@ class Search extends Component {
     const {cb} = props;
     super();
     this.state = {
+      type: '',
       search: '',
     }
 
     this.cb = cb;
     this.handleKey = this.handleKey.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  // componentDidUpdate() {
-  //   console.log('Я апдейтед')
-  //   console.log(this.state.search);
-
-  // }
+  handleChange = (event) => {
+    this.setState({[event.target.name]: event.target.value}, () => {
+      this.props.cb(this.state.search, this.state.type);
+    });
+  }
 
   handleKey = (event) => {
     if (event.key === 'Enter') {
-      this.props.cb(this.state.search);
+      this.props.cb(this.state.search, this.state.type);
     }
   }
 
@@ -37,8 +39,24 @@ class Search extends Component {
             onChange={(e) => { this.setState({ search: e.target.value})}}
             onKeyDown={this.handleKey}
             />
-            <button className="btn search-btn" onClick={this.handleKey}>Search</button>
+            <button className="btn search-btn" onClick={() => this.props.cb(this.state.search, this.state.type)}>Search</button>
         </div>
+        
+        <div className="row">
+          <label>
+            <input class="with-gap" name="type" type="radio" value='' checked={this.state.type === ''} onChange={this.handleChange}/>
+            <span>All</span>
+          </label>
+          <label>
+            <input class="with-gap" name="type" type="radio" value='movie' checked={this.state.type === 'movie'} onChange={this.handleChange}/>
+            <span>Movie</span>
+          </label>
+          <label>
+            <input class="with-gap" name="type" type="radio" value='series' checked={this.state.type === 'series'} onChange={this.handleChange}/>
+            <span>Series</span>
+          </label>
+        </div>
+        
       </div>
     );
   }
